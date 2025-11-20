@@ -6,6 +6,7 @@
   import ResizeBar from './ResizeBar.svelte'
   import SidebarToggleButton from './SidebarToggleButton.svelte'
   import BlocSelector from './BlocSelector/BlocSelector.svelte'
+  import RollbackMessage from './RollbackMessage.svelte'
 
   interface Props {
     data: EditorComponentData[]
@@ -46,8 +47,7 @@
   {/if}
 
   <BlocSelector {iconsUrl} />
-
-  <!-- RollbackMessage will go here later -->
+  <RollbackMessage />
 </div>
 
 <style>
