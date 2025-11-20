@@ -25,8 +25,8 @@
   let previewMode = $derived(editorStore.previewMode)
   let isMobile = $derived(previewMode === PreviewModes.PHONE)
 
-  // Check if using client-side postMessage preview
-  let usePostMessage = VisualEditorAPI.postMessagePreview
+  // Check if using client-side postMessage preview (reactive)
+  let usePostMessage = $derived(VisualEditorAPI.postMessagePreview)
 
   onMount(async () => {
     try {
