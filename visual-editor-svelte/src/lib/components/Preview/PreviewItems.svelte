@@ -10,9 +10,10 @@
     data: EditorComponentData[]
     initialHTML: Record<string, string>
     previewUrl: string
+    iframeWindow?: Window | null
   }
 
-  let { data, initialHTML = {}, previewUrl }: Props = $props()
+  let { data, initialHTML = {}, previewUrl, iframeWindow = null }: Props = $props()
 
   let definitions = $derived(editorStore.definitions)
 
@@ -30,6 +31,7 @@
         title={definitions[item._name]?.title || ''}
         initialHTML={initialHTML[item._id] || ''}
         {previewUrl}
+        {iframeWindow}
       />
     </div>
   {/each}

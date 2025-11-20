@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview Page - Client Side</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    .hero {
+      padding: 4rem 2rem;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero h1 {
+      margin: 0 0 1rem 0;
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    .hero .content {
+      font-size: 1.25rem;
+      line-height: 1.6;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: opacity 0.2s;
+      margin: 2rem;
+    }
+
+    .button:hover {
+      opacity: 0.8;
+    }
+
+    .features {
+      padding: 3rem 2rem;
+      background: #f8f9fa;
+    }
+
+    .features h2 {
+      text-align: center;
+      margin: 0 0 3rem 0;
+      font-size: 2.5rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .testimonial {
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-align: center;
+    }
+
+    .testimonial img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      display: block;
+      border: 3px solid white;
+    }
+
+    .testimonial blockquote {
+      font-size: 1.5rem;
+      font-style: italic;
+      margin: 0 0 1.5rem 0;
+      line-height: 1.6;
+    }
+
+    .testimonial .stars {
+      margin-bottom: 0.5rem;
+    }
+
+    .testimonial .stars span {
+      font-size: 1.5rem;
+    }
+
+    .testimonial cite {
+      font-weight: bold;
+      font-size: 1.125rem;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+  <!-- Container for Visual Editor components -->
+  <div id="ve-components"></div>
+
+  <script>
+    /**
+     * Client-Side Preview Script
+     *
+     * This script listens for postMessage events from the Visual Editor
+     * and renders components dynamically without server-side requests.
+     */
+
+    // Component registry
+    const components = {
+      hero: renderHero,
+      button: renderButton,
+      features: renderFeatures,
+      testimonial: renderTestimonial
+    }
+
+    // Listen for messages from Visual Editor
+    window.addEventListener('message', (event) => {
+      const { type, componentId, data } = event.data
+
+      if (type === 'visual-editor-update') {
+        console.log('Received update for component:', componentId, data)
+
+        // Find or create the component element
+        let element = document.querySelector(`[data-component-id="${componentId}"]`)
+
+        if (!element) {
+          // Create new element if it doesn't exist
+          element = document.createElement('div')
+          element.setAttribute('data-component-id', componentId)
+          document.getElementById('ve-components').appendChild(element)
+        }
+
+        // Render the component
+        const renderFunction = components[data._name]
+        if (renderFunction) {
+          element.innerHTML = renderFunction(data)
+        } else {
+          element.innerHTML = `<div style="padding: 2rem; background: #ffa; color: #860;">Unknown component: ${data._name}</div>`
+        }
+      }
+    })
+
+    // Component rendering functions
+    function escapeHtml(text) {
+      const div = document.createElement('div')
+      div.textContent = text || ''
+      return div.innerHTML
+    }
+
+    function renderHero(data) {
+      const title = escapeHtml(data.title || '')
+      const content = data.content || ''
+      const bgColor = data.bgColor || '#ffffff'
+      const textAlign = data.centered ? 'center' : 'left'
+
+      return `
+        <div class="hero" style="background-color: ${bgColor}; text-align: ${textAlign};">
+          <div style="max-width: 800px; margin: 0 auto;">
+            ${title ? `<h1>${title}</h1>` : ''}
+            ${content ? `<div class="content">${content}</div>` : ''}
+          </div>
+        </div>
+      `
+    }
+
+    function renderButton(data) {
+      const text = escapeHtml(data.text || 'Button')
+      const url = escapeHtml(data.url || '#')
+      const variant = data.variant || 'primary'
+      const bgColor = data.bgColor || '#007bff'
+
+      const styles = {
+        primary: `background: ${bgColor}; color: white; border: none;`,
+        secondary: `background: #6c757d; color: white; border: none;`,
+        outline: `background: transparent; color: ${bgColor}; border: 2px solid ${bgColor};`
+      }
+
+      const style = styles[variant] || styles.primary
+
+      return `
+        <div style="padding: 2rem;">
+          <a href="${url}" class="button" style="${style}">
+            ${text}
+          </a>
+        </div>
+      `
+    }
+
+    function renderFeatures(data) {
+      const title = escapeHtml(data.title || '')
+      const columns = Math.max(2, Math.min(4, parseInt(data.columns) || 3))
+
+      let cards = ''
+      for (let i = 1; i <= columns; i++) {
+        cards += `
+          <div class="feature-card">
+            <h3>Fonctionnalité ${i}</h3>
+            <p>Description de la fonctionnalité numéro ${i}.</p>
+          </div>
+        `
+      }
+
+      return `
+        <div class="features">
+          ${title ? `<h2>${title}</h2>` : ''}
+          <div class="features-grid" style="grid-template-columns: repeat(${columns}, 1fr);">
+            ${cards}
+          </div>
+        </div>
+      `
+    }
+
+    function renderTestimonial(data) {
+      const author = escapeHtml(data.author || 'Anonyme')
+      const quote = data.quote || ''
+      const photo = escapeHtml(data.photo || '')
+      const rating = Math.max(1, Math.min(5, parseInt(data.rating) || 5))
+
+      let stars = ''
+      for (let i = 0; i < 5; i++) {
+        const color = i < rating ? '#ffc107' : 'rgba(255,255,255,0.3)'
+        stars += `<span style="color: ${color};">★</span>`
+      }
+
+      return `
+        <div class="testimonial">
+          <div style="max-width: 800px; margin: 0 auto;">
+            ${photo ? `<img src="${photo}" alt="${author}">` : ''}
+            ${quote ? `<blockquote>${quote}</blockquote>` : ''}
+            <div class="stars">${stars}</div>
+            <cite>— ${author}</cite>
+          </div>
+        </div>
+      `
+    }
+
+    console.log('✅ Client-side preview ready - listening for postMessage events')
+  </script>
+</body>
+</html>

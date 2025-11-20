@@ -3,6 +3,7 @@
   import { mount, unmount } from 'svelte'
   import { onMount } from 'svelte'
   import { editorStore, PreviewModes } from '$lib/stores/editor.svelte'
+  import { VisualEditorAPI } from '$lib/index'
   import Spinner from '$lib/components/ui/Spinner.svelte'
   import PreviewItems from './PreviewItems.svelte'
 
@@ -15,6 +16,7 @@
 
   let iframeEl: HTMLIFrameElement
   let iframeRoot: HTMLElement | null = $state(null)
+  let iframeWindow: Window | null = $state(null)
   let loaded = $state(false)
   let showSpinner = $derived(!loaded)
   let initialHTML: Record<string, string> = {}
@@ -23,44 +25,77 @@
   let previewMode = $derived(editorStore.previewMode)
   let isMobile = $derived(previewMode === PreviewModes.PHONE)
 
+  // Check if using client-side postMessage preview
+  let usePostMessage = VisualEditorAPI.postMessagePreview
+
   onMount(async () => {
     try {
-      // Fetch the initial preview HTML
-      const response = await fetch(previewUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
+      if (usePostMessage) {
+        // Client-side: Load preview page directly in iframe
+        iframeEl.src = previewUrl
 
-      if (!response.ok) {
-        console.error('Preview fetch failed:', response.statusText)
-        return
-      }
+        // Wait for iframe to load
+        await new Promise((resolve) => {
+          iframeEl.addEventListener('load', resolve, { once: true })
+        })
 
-      // Write content to iframe
-      const html = await response.text()
-      const iframeDoc = iframeEl.contentDocument
-      if (iframeDoc) {
-        iframeDoc.open()
-        iframeDoc.write(html)
-        iframeDoc.close()
+        const iframeDoc = iframeEl.contentDocument
+        const iframeWin = iframeEl.contentWindow
 
-        // Find the root element for components
-        const root = iframeDoc.querySelector('#ve-components') as HTMLElement
-        if (root) {
-          // Store initial HTML for each component
-          initialHTML = Array.from(root.children).reduce(
-            (acc, v, k) => ({ ...acc, [data[k]?._id || k]: v.outerHTML }),
-            {}
-          )
-          root.innerHTML = ''
-          iframeRoot = root
+        if (iframeDoc && iframeWin) {
+          iframeWindow = iframeWin
 
-          // Mount PreviewItems into the iframe
-          mountPreviewItems(root)
+          // Find the root element for components
+          const root = iframeDoc.querySelector('#ve-components') as HTMLElement
+          if (root) {
+            // In client-side mode, we don't extract initialHTML since
+            // the page handles its own rendering via postMessage
+            iframeRoot = root
+          }
+        }
+      } else {
+        // Server-side: Fetch the initial preview HTML
+        const response = await fetch(previewUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json'
+          },
+          body: JSON.stringify(data)
+        })
+
+        if (!response.ok) {
+          console.error('Preview fetch failed:', response.statusText)
+          return
+        }
+
+        // Write content to iframe
+        const html = await response.text()
+        const iframeDoc = iframeEl.contentDocument
+        if (iframeDoc) {
+          iframeDoc.open()
+          iframeDoc.write(html)
+          iframeDoc.close()
+
+          const iframeWin = iframeEl.contentWindow
+          if (iframeWin) {
+            iframeWindow = iframeWin
+          }
+
+          // Find the root element for components
+          const root = iframeDoc.querySelector('#ve-components') as HTMLElement
+          if (root) {
+            // Store initial HTML for each component
+            initialHTML = Array.from(root.children).reduce(
+              (acc, v, k) => ({ ...acc, [data[k]?._id || k]: v.outerHTML }),
+              {}
+            )
+            root.innerHTML = ''
+            iframeRoot = root
+
+            // Mount PreviewItems into the iframe
+            mountPreviewItems(root)
+          }
         }
       }
     } catch (error) {
@@ -84,7 +119,8 @@
       props: {
         data,
         initialHTML,
-        previewUrl
+        previewUrl,
+        iframeWindow
       }
     })
   }

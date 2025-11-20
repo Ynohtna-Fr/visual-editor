@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { EditorComponentData } from '$lib/types'
   import { editorStore } from '$lib/stores/editor.svelte'
+  import { VisualEditorAPI } from '$lib/index'
   import Spinner from '$lib/components/ui/Spinner.svelte'
   import { tick } from 'svelte'
 
@@ -9,9 +10,10 @@
     initialHTML: string
     previewUrl: string
     title: string
+    iframeWindow?: Window | null
   }
 
-  let { data, initialHTML, previewUrl, title }: Props = $props()
+  let { data, initialHTML, previewUrl, title, iframeWindow = null }: Props = $props()
 
   let element: HTMLDivElement
   let html = $state(initialHTML)
@@ -22,7 +24,10 @@
 
   let isFocused = $derived(editorStore.focusIndex === data._id)
 
-  // Debounced preview fetch
+  // Check if using client-side postMessage preview
+  let usePostMessage = $derived(VisualEditorAPI.postMessagePreview)
+
+  // Debounced preview update (fetch or postMessage)
   let dataStr = $derived(JSON.stringify(data))
   $effect(() => {
     // Read the derived value to track changes
@@ -37,25 +42,40 @@
     if (fetchTimeout) clearTimeout(fetchTimeout)
     if (loadingTimeout) clearTimeout(loadingTimeout)
 
-    // Show loading spinner after 200ms
-    loadingTimeout = window.setTimeout(() => {
-      loading = true
-    }, 200)
+    // Show loading spinner after 200ms (only for server-side)
+    if (!usePostMessage) {
+      loadingTimeout = window.setTimeout(() => {
+        loading = true
+      }, 200)
+    }
 
-    // Fetch after 500ms debounce
+    // Update after 500ms debounce
     fetchTimeout = window.setTimeout(async () => {
       try {
-        const response = await fetch(previewUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          },
-          body: JSON.stringify({ ...data, preview: true })
-        })
-        html = await response.text()
+        if (usePostMessage && iframeWindow) {
+          // Client-side: Send postMessage to iframe
+          iframeWindow.postMessage(
+            {
+              type: 'visual-editor-update',
+              componentId: data._id,
+              data: { ...data, preview: true }
+            },
+            '*'
+          )
+        } else {
+          // Server-side: Fetch HTML from server
+          const response = await fetch(previewUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json'
+            },
+            body: JSON.stringify({ ...data, preview: true })
+          })
+          html = await response.text()
+        }
       } catch (error) {
-        console.error('Preview fetch failed:', error)
+        console.error('Preview update failed:', error)
       } finally {
         if (loadingTimeout) clearTimeout(loadingTimeout)
         loading = false
