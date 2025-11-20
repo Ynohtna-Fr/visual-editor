@@ -149,8 +149,11 @@
 
 <style>
   .visual-editor-wrapper {
-    /* Ensure the wrapper doesn't interfere with layout */
-    display: contents;
+    /* Provide a proper container for the fixed layout */
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
   }
 
   textarea {

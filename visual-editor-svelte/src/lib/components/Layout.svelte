@@ -56,11 +56,11 @@
     isolation: isolate;
     z-index: 9999;
     font-size: 15px;
-    --ve-sidebar: 600px;
+    --ve-sidebar: 33vw;
     --ve-clampedSidebar: clamp(450px, var(--ve-sidebar), calc(100vw - 375px));
     color: var(--ve-color-light);
     transition: background-color 0.3s;
-    position: fixed;
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
