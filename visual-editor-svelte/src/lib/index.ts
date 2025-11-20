@@ -69,12 +69,15 @@ export class VisualEditorAPI {
   static postMessagePreview: boolean = false
 
   constructor(options: { lang?: any; postMessagePreview?: boolean } = {}) {
+    console.log('[VisualEditorAPI] Constructor called with options:', options)
     if (options.lang) {
       setLang(options.lang)
     }
     if (options.postMessagePreview !== undefined) {
       VisualEditorAPI.postMessagePreview = options.postMessagePreview
+      console.log('[VisualEditorAPI] postMessagePreview set to:', VisualEditorAPI.postMessagePreview)
     }
+    console.log('[VisualEditorAPI] Final postMessagePreview value:', VisualEditorAPI.postMessagePreview)
   }
 
   /**

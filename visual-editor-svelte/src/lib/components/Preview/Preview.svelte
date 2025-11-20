@@ -29,8 +29,12 @@
   let usePostMessage = $derived(VisualEditorAPI.postMessagePreview)
 
   onMount(async () => {
+    console.log('[Preview] onMount - usePostMessage:', usePostMessage)
+    console.log('[Preview] VisualEditorAPI.postMessagePreview:', VisualEditorAPI.postMessagePreview)
+
     try {
       if (usePostMessage) {
+        console.log('[Preview] Using CLIENT-SIDE mode (postMessage)')
         // Client-side: Load preview page directly in iframe
         iframeEl.src = previewUrl
 
@@ -54,6 +58,7 @@
           }
         }
       } else {
+        console.log('[Preview] Using SERVER-SIDE mode (fetch POST)')
         // Server-side: Fetch the initial preview HTML
         const response = await fetch(previewUrl, {
           method: 'POST',
