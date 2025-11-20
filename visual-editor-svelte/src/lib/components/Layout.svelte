@@ -13,9 +13,10 @@
     previewUrl?: string
     onclose: () => void
     iconsUrl: string
+    usePostMessagePreview?: boolean
   }
 
-  let { data, previewUrl, onclose, iconsUrl }: Props = $props()
+  let { data, previewUrl, onclose, iconsUrl, usePostMessagePreview = false }: Props = $props()
 
   let sidebarCollapsed = $state(false)
   let showResizeControl = $derived(!sidebarCollapsed)
@@ -37,7 +38,7 @@
   </div>
 
   {#if previewUrl}
-    <Preview {data} {previewUrl} />
+    <Preview {data} {previewUrl} {usePostMessagePreview} />
   {/if}
 
   <SidebarToggleButton collapsed={sidebarCollapsed} onclick={toggleSidebar} />

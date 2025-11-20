@@ -10,9 +10,10 @@
   interface Props {
     data: EditorComponentData[]
     previewUrl: string
+    usePostMessagePreview?: boolean
   }
 
-  let { data, previewUrl }: Props = $props()
+  let { data, previewUrl, usePostMessagePreview = false }: Props = $props()
 
   let iframeEl: HTMLIFrameElement
   let iframeRoot: HTMLElement | null = $state(null)
@@ -26,14 +27,11 @@
   let isMobile = $derived(previewMode === PreviewModes.PHONE)
 
   onMount(async () => {
-    // Check if using client-side postMessage preview (read in onMount to avoid SSR issues)
-    const usePostMessage = VisualEditorAPI.postMessagePreview
-
-    console.log('[Preview] onMount - usePostMessage:', usePostMessage)
-    console.log('[Preview] VisualEditorAPI.postMessagePreview:', VisualEditorAPI.postMessagePreview)
+    console.log('[Preview] onMount - usePostMessagePreview (from prop):', usePostMessagePreview)
+    console.log('[Preview] VisualEditorAPI.postMessagePreview (global):', VisualEditorAPI.postMessagePreview)
 
     try {
-      if (usePostMessage) {
+      if (usePostMessagePreview) {
         console.log('[Preview] Using CLIENT-SIDE mode (postMessage)')
         // Client-side: Load preview page directly in iframe
         iframeEl.src = previewUrl
@@ -125,7 +123,8 @@
         data,
         initialHTML,
         previewUrl,
-        iframeWindow
+        iframeWindow,
+        usePostMessagePreview
       }
     })
   }

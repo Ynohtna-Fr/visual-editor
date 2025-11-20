@@ -19,6 +19,7 @@
     hidden?: boolean
     insertposition?: string
     hiddencategories?: string
+    postmessagepreview?: string
   }
 
   let {
@@ -28,13 +29,17 @@
     name = '',
     hidden = false,
     insertposition = 'start',
-    hiddencategories = ''
+    hiddencategories = '',
+    postmessagepreview = 'false'
   }: Props = $props()
 
   // Internal state
   let visible = $state(!hidden)
   let mounted = $state(false)
   let skipNextChange = $state(true)
+
+  // Parse postmessagepreview attribute (string to boolean)
+  let usePostMessagePreview = $derived(postmessagepreview === 'true')
 
   // Parse and initialize data
   function parseValue(jsonString: string): EditorComponentData[] {
@@ -128,7 +133,13 @@
 {#if visible}
   <div class="visual-editor-wrapper">
     <BaseStyles>
-      <Layout data={editorStore.data} previewUrl={preview} iconsUrl={iconsurl} onclose={handleClose} />
+      <Layout
+        data={editorStore.data}
+        previewUrl={preview}
+        iconsUrl={iconsurl}
+        usePostMessagePreview={usePostMessagePreview}
+        onclose={handleClose}
+      />
     </BaseStyles>
   </div>
 {/if}

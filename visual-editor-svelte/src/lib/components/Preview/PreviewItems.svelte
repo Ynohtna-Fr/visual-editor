@@ -11,9 +11,10 @@
     initialHTML: Record<string, string>
     previewUrl: string
     iframeWindow?: Window | null
+    usePostMessagePreview?: boolean
   }
 
-  let { data, initialHTML = {}, previewUrl, iframeWindow = null }: Props = $props()
+  let { data, initialHTML = {}, previewUrl, iframeWindow = null, usePostMessagePreview = false }: Props = $props()
 
   let definitions = $derived(editorStore.definitions)
 
@@ -32,6 +33,7 @@
         initialHTML={initialHTML[item._id] || ''}
         {previewUrl}
         {iframeWindow}
+        {usePostMessagePreview}
       />
     </div>
   {/each}

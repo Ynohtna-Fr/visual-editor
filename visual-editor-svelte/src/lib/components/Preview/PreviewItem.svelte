@@ -11,9 +11,10 @@
     previewUrl: string
     title: string
     iframeWindow?: Window | null
+    usePostMessagePreview?: boolean
   }
 
-  let { data, initialHTML, previewUrl, title, iframeWindow = null }: Props = $props()
+  let { data, initialHTML, previewUrl, title, iframeWindow = null, usePostMessagePreview = false }: Props = $props()
 
   let element: HTMLDivElement
   let html = $state(initialHTML)
@@ -23,9 +24,6 @@
   let loadingTimeout: number | undefined
 
   let isFocused = $derived(editorStore.focusIndex === data._id)
-
-  // Check if using client-side postMessage preview
-  let usePostMessage = $derived(VisualEditorAPI.postMessagePreview)
 
   // Debounced preview update (fetch or postMessage)
   let dataStr = $derived(JSON.stringify(data))
@@ -43,7 +41,7 @@
     if (loadingTimeout) clearTimeout(loadingTimeout)
 
     // Show loading spinner after 200ms (only for server-side)
-    if (!usePostMessage) {
+    if (!usePostMessagePreview) {
       loadingTimeout = window.setTimeout(() => {
         loading = true
       }, 200)
@@ -52,7 +50,7 @@
     // Update after 500ms debounce
     fetchTimeout = window.setTimeout(async () => {
       try {
-        if (usePostMessage && iframeWindow) {
+        if (usePostMessagePreview && iframeWindow) {
           // Client-side: Send postMessage to iframe
           iframeWindow.postMessage(
             {
