@@ -21,6 +21,7 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build && npm run package",
+    "build:watch": "vite build --watch",
     "package": "svelte-package -o dist",
     "preview": "vite preview",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -31,7 +32,10 @@
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
     "test:e2e": "start-server-and-test 'php -S 0.0.0.0:8000 -ddisplay_errors=1 -q' http://localhost:8000 'npx cypress run'",
-    "test:e2e:watch": "start-server-and-test 'php -S 0.0.0.0:8000 -ddisplay_errors=1 -q' http://localhost:8000 'npx cypress open'"
+    "test:e2e:watch": "start-server-and-test 'php -S 0.0.0.0:8000 -ddisplay_errors=1 -q' http://localhost:8000 'npx cypress open'",
+    "example": "php -S localhost:8000",
+    "setup:local": "bash scripts/setup-local.sh",
+    "prepublishOnly": "npm run build && npm run check"
   },
   "keywords": [
     "svelte",
