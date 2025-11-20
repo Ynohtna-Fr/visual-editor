@@ -57,36 +57,32 @@
       isCollapsed = true
     }
   })
-
-  // Missing definition case
-  if (!definition) {
-    return (
-      <div class="sidebar-bloc-wrapper sidebar-bloc-missing" data-dragging={false}>
-        <DragHandle />
-        <div class="missing-content">
-          <strong>Composant manquant</strong>
-          <p>Le composant "{data._name}" n'est pas défini</p>
-          <ButtonIcon danger onclick={handleRemove} title={t('deleteComponent')}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
-              <path
-                d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-4.586 6l1.768 1.768-1.414 1.414L12 15.414l-1.768 1.768-1.414-1.414L10.586 14l-1.768-1.768 1.414-1.414L12 12.586l1.768-1.768 1.414 1.414L13.414 14zM9 4v2h6V4H9z"
-                fill="currentColor"
-              />
-            </svg>
-          </ButtonIcon>
-        </div>
-      </div>
-    )
-  }
 </script>
 
-<div bind:this={blocElement} class="sidebar-bloc-wrapper" data-dragging={false}>
-  <DragHandle />
-  <SidebarHeading
-    title={definition.title}
-    description={isCollapsed ? labelSafe : null}
-    onclick={focusBloc}
-  >
+{#if !definition}
+  <div class="sidebar-bloc-wrapper sidebar-bloc-missing" data-dragging={false}>
+    <DragHandle />
+    <div class="missing-content">
+      <strong>Composant manquant</strong>
+      <p>Le composant "{data._name}" n'est pas défini</p>
+      <ButtonIcon danger onclick={handleRemove} title={t('deleteComponent')}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20">
+          <path
+            d="M17 6h5v2h-2v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8H2V6h5V3a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v3zm1 2H6v12h12V8zm-4.586 6l1.768 1.768-1.414 1.414L12 15.414l-1.768 1.768-1.414-1.414L10.586 14l-1.768-1.768 1.414-1.414L12 12.586l1.768-1.768 1.414 1.414L13.414 14zM9 4v2h6V4H9z"
+            fill="currentColor"
+          />
+        </svg>
+      </ButtonIcon>
+    </div>
+  </div>
+{:else}
+  <div bind:this={blocElement} class="sidebar-bloc-wrapper" data-dragging={false}>
+    <DragHandle />
+    <SidebarHeading
+      title={definition.title}
+      description={isCollapsed ? labelSafe : null}
+      onclick={focusBloc}
+    >
     {#snippet hoverActions()}
       <!-- Copy action will be added later -->
       <ButtonIcon danger onclick={handleRemove} title={t('deleteComponent')}>
@@ -119,6 +115,7 @@
     </Flex>
   {/if}
 </div>
+{/if}
 
 <style>
   .sidebar-bloc-wrapper {

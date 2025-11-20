@@ -12,12 +12,14 @@
 
   let { data, onclose }: Props = $props()
 
-  enum ViewMode {
-    BLOCS,
-    TEMPLATES
-  }
+  const ViewMode = {
+    BLOCS: 'BLOCS',
+    TEMPLATES: 'TEMPLATES'
+  } as const
 
-  let viewMode = $state(ViewMode.BLOCS)
+  type ViewMode = (typeof ViewMode)[keyof typeof ViewMode]
+
+  let viewMode = $state<ViewMode>(ViewMode.BLOCS)
   let templates = $derived(editorStore.templates)
   let hasTemplates = $derived(templates.length > 0)
   let showEmpty = $derived(data.length === 0 && hasTemplates)

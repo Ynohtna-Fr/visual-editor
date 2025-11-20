@@ -9,7 +9,7 @@
   let { collapsed, onclick }: Props = $props()
 </script>
 
-<ButtonIcon {onclick} class="sidebar-toggle-btn" class:collapsed>
+<ButtonIcon {onclick} class="sidebar-toggle-btn {collapsed ? 'collapsed' : ''}">
   <svg
     width="20"
     height="20"

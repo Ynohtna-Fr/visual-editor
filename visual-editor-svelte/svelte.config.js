@@ -10,9 +10,11 @@ const config = {
   },
 
   compilerOptions: {
-    // Enable custom element support for Web Component export
-    customElement: false, // Will be enabled per-component basis
-    runes: true // Enable Svelte 5 runes
+    // Custom elements are enabled per-component with <svelte:options customElement="..." />
+    // Global setting is false to avoid converting all components
+    customElement: false,
+    // Enable Svelte 5 runes ($state, $derived, $effect, etc.)
+    runes: true
   }
 }
 
