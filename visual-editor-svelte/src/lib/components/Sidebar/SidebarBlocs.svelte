@@ -12,12 +12,13 @@
 
   let { data }: Props = $props()
 
-  let items = $state(data)
+  // Map items to include 'id' property for svelte-dnd-action
+  let items = $state(data.map(item => ({ ...item, id: item._id })))
   let definitions = $derived(editorStore.definitions)
 
   // Sync with prop changes
   $effect(() => {
-    items = data
+    items = data.map(item => ({ ...item, id: item._id }))
   })
 
   function handleDndConsider(e: CustomEvent<DndEvent<EditorComponentData>>) {
@@ -40,7 +41,7 @@
 
 <div
   class="sidebar-blocs"
-  use:dndzone={{ items, flipDurationMs: 200, dropTargetStyle: {} }}
+  use:dndzone={{ items, flipDurationMs: 200, dropTargetStyle: {}, type: 'sidebar-blocs' }}
   onconsider={handleDndConsider}
   onfinalize={handleDndFinalize}
 >
