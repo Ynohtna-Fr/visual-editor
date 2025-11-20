@@ -18,5 +18,5 @@ export const Select = defineField<FieldArgs, string>({
     default: '',
     options: []
   },
-  component: SelectFieldComponent
+  render: SelectFieldComponent
 })

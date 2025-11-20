@@ -12,5 +12,5 @@ export const Checkbox = defineField<FieldArgs, boolean>({
     label: '',
     default: false
   },
-  component: CheckboxFieldComponent
+  render: CheckboxFieldComponent
 })

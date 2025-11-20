@@ -13,5 +13,5 @@ export const Alignment = defineField<FieldArgs, FieldValue>({
   defaultOptions: {
     default: 'left'
   },
-  component: AlignmentFieldComponent
+  render: AlignmentFieldComponent
 })

@@ -13,5 +13,5 @@ export const DatePicker = defineField<FieldArgs, number>({
     default: '',
     time: false
   },
-  component: DatePickerFieldComponent
+  render: DatePickerFieldComponent
 })

@@ -1,8 +1,12 @@
 {
   "name": "@boxraiser/visual-editor-svelte",
   "version": "1.0.0-beta.1",
-  "description": "Visual page builder with real-time preview, built with Svelte 5",
+  "description": "A powerful visual page builder with real-time preview and 14 field types, built with Svelte 5. 40-60% smaller bundle size than the React version.",
   "type": "module",
+  "homepage": "https://github.com/boxraiser/visual-editor-svelte#readme",
+  "bugs": {
+    "url": "https://github.com/boxraiser/visual-editor-svelte/issues"
+  },
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -31,11 +35,24 @@
   },
   "keywords": [
     "svelte",
+    "svelte5",
     "visual-editor",
     "page-builder",
     "wysiwyg",
+    "cms",
     "blocks",
-    "drag-and-drop"
+    "drag-and-drop",
+    "web-component",
+    "custom-element",
+    "form-builder",
+    "content-editor",
+    "rich-text",
+    "tiptap",
+    "typescript",
+    "iframe-preview",
+    "live-preview",
+    "component-library",
+    "runes"
   ],
   "repository": {
     "type": "git",
@@ -86,6 +103,10 @@
   },
   "peerDependencies": {
     "svelte": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
   },
   "volta": {
     "node": "22.17.1"

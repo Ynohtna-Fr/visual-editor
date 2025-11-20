@@ -8,5 +8,5 @@ type RowArgs = {
 
 export const Row = defineFieldGroup<RowArgs>({
   defaultOptions: {},
-  component: RowFieldComponent
+  render: RowFieldComponent
 })

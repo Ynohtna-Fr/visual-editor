@@ -3,6 +3,8 @@ export { default as VisualEditor } from './VisualEditor.svelte'
 
 // Main API
 export { editorStore, PreviewModes } from './stores/editor.svelte'
+import { editorStore as store } from './stores/editor.svelte'
+import { setTranslations as setLang } from './functions/i18n'
 
 // UI Components
 export * from './components/ui'
@@ -68,7 +70,7 @@ export class VisualEditorAPI {
 
   constructor(options: { lang?: any; postMessagePreview?: boolean } = {}) {
     if (options.lang) {
-      setTranslations(options.lang)
+      setLang(options.lang)
     }
     if (options.postMessagePreview !== undefined) {
       VisualEditorAPI.postMessagePreview = options.postMessagePreview
@@ -97,8 +99,8 @@ export class VisualEditorAPI {
    * ```
    */
   registerComponent(name: string, definition: import('./types').EditorComponentDefinition) {
-    editorStore.definitions = {
-      ...editorStore.definitions,
+    store.definitions = {
+      ...store.definitions,
       [name]: { label: 'title', ...definition }
     }
   }
@@ -120,7 +122,7 @@ export class VisualEditorAPI {
    * ```
    */
   registerTemplate(template: import('./types').EditorComponentTemplate) {
-    editorStore.templates = [...editorStore.templates, template]
+    store.templates = [...store.templates, template]
   }
 
   /**

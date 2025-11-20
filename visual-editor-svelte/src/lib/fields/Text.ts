@@ -12,5 +12,5 @@ export const Text = defineField<FieldArgs, string>({
   defaultOptions: {
     default: ''
   },
-  component: TextFieldComponent
+  render: TextFieldComponent
 })

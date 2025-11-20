@@ -12,5 +12,5 @@ export const ImageUrl = defineField<FieldArgs, string>({
   defaultOptions: {
     default: ''
   },
-  component: ImageUrlFieldComponent
+  render: ImageUrlFieldComponent
 })

@@ -12,5 +12,5 @@ export const TextAlign = defineField<FieldArgs, string>({
   defaultOptions: {
     default: 'left'
   },
-  component: TextAlignFieldComponent
+  render: TextAlignFieldComponent
 })

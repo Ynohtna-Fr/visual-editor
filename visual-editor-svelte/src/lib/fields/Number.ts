@@ -14,5 +14,5 @@ export const Number = defineField<FieldArgs, string>({
   defaultOptions: {
     default: ''
   },
-  component: NumberFieldComponent
+  render: NumberFieldComponent
 })

@@ -1,5 +1,5 @@
-import { FunctionComponent, ReactElement } from 'react'
-import { Translations } from 'src/langs/fr'
+import type { Component, Snippet } from 'svelte'
+import { Translations } from '$lib/langs/fr'
 
 export type TranslationKey = keyof typeof Translations
 export type Translation = Record<TranslationKey, string>
@@ -24,16 +24,16 @@ export type FieldComponent<
   FieldOptions,
   FieldValue,
   FieldExtraParams = {}
-> = FunctionComponent<
+> = Component<
   {
     value: FieldValue
-    onChange: (v: FieldValue) => void
+    onchange: (v: FieldValue) => void
     options: FieldOptions
   } & FieldExtraParams
 >
-export type FieldGroupComponent<O> = FunctionComponent<{
+export type FieldGroupComponent<O> = Component<{
   options: O
-  children: ReactElement
+  children: Snippet
 }>
 
 export type FieldDefinition<O = Record<string, unknown>, V = unknown> =
@@ -76,7 +76,7 @@ export type EditorComponentDefinitions = Record<
 >
 
 export type DragData = {
-  component: FunctionComponent
+  component: Component
   [key: string]: any
 }
 

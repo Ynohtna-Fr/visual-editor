@@ -85,7 +85,8 @@ export function indexify(object: unknown): unknown {
       }
     })
   } else if (typeof object === 'object' && object !== null) {
-    Object.keys(object).forEach((key) => indexify(object[key]))
+    const obj = object as Record<string, unknown>
+    Object.keys(obj).forEach((key) => indexify(obj[key]))
   }
   return object
 }

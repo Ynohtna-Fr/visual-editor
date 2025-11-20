@@ -16,11 +16,11 @@ export function defineField<Options extends FieldOption, Value>(
   args:
     | {
         defaultOptions: Options
-        component: Component<any>
+        render: Component<any>
       }
     | (() => {
         defaultOptions: Options
-        component: Component<any>
+        render: Component<any>
       })
 ) {
   return (name: string, options = {} as Options) => {
@@ -37,14 +37,14 @@ export function defineField<Options extends FieldOption, Value>(
 
 export function defineFieldGroup<Options extends FieldOption>(args: {
   defaultOptions: Options
-  component: Component<any>
+  render: Component<any>
 }) {
   return (fields: FieldDefinition<any, any>[], options: Options = {} as Options) => {
     return {
       ...genericFieldDefinition(args, options),
       group: true as const,
       fields: fields,
-      component: args.component
+      render: args.component
     }
   }
 }

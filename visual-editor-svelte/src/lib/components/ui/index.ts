@@ -12,4 +12,4 @@ export { default as Flex } from './Flex.svelte'
 export { default as UnstyledButton } from './UnstyledButton.svelte'
 export { default as DragHandle } from './DragHandle.svelte'
 export { default as Flash } from './Flash.svelte'
-export { default as Tabs } from './Tabs.svelte'
+// Note: Tabs UI component not exported to avoid conflict with Tabs field type

@@ -17,5 +17,5 @@ export const Range = defineField<FieldArgs, number>({
     max: 100,
     step: 1
   },
-  component: RangeFieldComponent
+  render: RangeFieldComponent
 })

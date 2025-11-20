@@ -20,7 +20,7 @@ export function Tabs(...tabs: TabDefinition[]) {
     options: { tabs: tabs },
     // Tabs field group will be handled specially by FieldsRenderer
     // because it needs to render different fields per tab
-    component: null as any, // Will be handled by FieldsRenderer
+    render: null as any, // Will be handled by FieldsRenderer
     fields: tabs.reduce(
       (acc, tab) => [...acc, ...tab.fields],
       [] as TabDefinition['fields']

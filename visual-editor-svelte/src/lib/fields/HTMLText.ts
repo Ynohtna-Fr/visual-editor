@@ -31,7 +31,7 @@ export function HTMLText(name: string, options: FieldArgs = {}): FieldDefinition
       textColor: colorToProperty(options.textColor && (data[options.textColor] as string)),
       defaultAlign: options.defaultAlign ? (data[options.defaultAlign] as 'left' | 'right' | 'center' | 'justify') : undefined
     }),
-    component: HTMLTextFieldComponent,
+    render: HTMLTextFieldComponent,
     group: false as const,
     ...defaultFieldProperties()
   }

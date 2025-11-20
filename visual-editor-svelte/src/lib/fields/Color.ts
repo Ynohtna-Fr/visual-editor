@@ -12,5 +12,5 @@ export const Color = defineField<FieldArgs, string | null>({
     default: '',
     colors: [] as string[]
   },
-  component: ColorFieldComponent
+  render: ColorFieldComponent
 })

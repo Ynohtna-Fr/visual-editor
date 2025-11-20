@@ -1,4 +1,4 @@
-import type { Translation } from 'src/types'
+import type { Translation } from '$lib/types'
 
 export const Translations: Translation = {
   unknownComponent: 'Unknown component',

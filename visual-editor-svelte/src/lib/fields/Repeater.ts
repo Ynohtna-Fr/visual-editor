@@ -21,5 +21,5 @@ export const Repeater = defineField<FieldArgs, RepeaterLine[]>({
     fields: [],
     default: []
   },
-  component: RepeaterFieldComponent
+  render: RepeaterFieldComponent
 })

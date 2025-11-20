@@ -9,7 +9,7 @@ export function setTranslations(translations: Translation) {
 }
 
 export function t(key: TranslationKey, values?: Record<string, string | number>): string {
-  let text = currentTranslations[key] || key
+  let text: string = currentTranslations[key] || String(key)
 
   if (values) {
     Object.entries(values).forEach(([k, v]) => {
